@@ -1,0 +1,171 @@
+[
+  { "name": "simple commit with -m",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: resolve null pointer\""},
+    "expect": "allow" },
+
+  { "name": "commit with --message flag",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit --message \"feat: add new endpoint\""},
+    "expect": "allow" },
+
+  { "name": "commit with --message= syntax",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit --message=\"chore: update deps\""},
+    "expect": "allow" },
+
+  { "name": "commit -am with message",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -am \"docs: update readme\""},
+    "expect": "allow" },
+
+  { "name": "human co-author trailer",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: new feature\\n\\nCo-authored-by: Jane Doe <jane@example.com>\""},
+    "expect": "allow" },
+
+  { "name": "multiple human co-authors",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: collab\\n\\nCo-authored-by: Alice <alice@corp.com>\\nCo-authored-by: Bob <bob@corp.com>\""},
+    "expect": "allow" },
+
+  { "name": "Claude noreply co-author",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCo-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "claude lowercase in name",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCo-authored-by: claude <claude@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "Claude with different anthropic email",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCo-authored-by: Claude AI <assistant@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "CO-AUTHORED-BY uppercase",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCO-AUTHORED-BY: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "extra whitespace around colon",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCo-authored-by :  Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "mixed case Co-Authored-By",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"fix: bug\\n\\nCo-Authored-By: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "GitHub Copilot co-author",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: impl\\n\\nCo-authored-by: Copilot <copilot@github.com>\""},
+    "expect": "instruct" },
+
+  { "name": "OpenAI/ChatGPT co-author",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: impl\\n\\nCo-authored-by: ChatGPT <chatgpt@openai.com>\""},
+    "expect": "instruct" },
+
+  { "name": "Cursor co-author",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: impl\\n\\nCo-authored-by: Cursor <noreply@cursor.sh>\""},
+    "expect": "instruct" },
+
+  { "name": "Devin co-author",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: impl\\n\\nCo-authored-by: Devin <devin@cognition.ai>\""},
+    "expect": "instruct" },
+
+  { "name": "git log mentioning co-author text",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git log --grep='Co-authored-by: Claude'"},
+    "expect": "allow" },
+
+  { "name": "echo containing co-author text",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "echo 'Co-authored-by: Claude <noreply@anthropic.com>'"},
+    "expect": "allow" },
+
+  { "name": "grep for co-author pattern",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "grep 'Co-authored-by' .git/COMMIT_EDITMSG"},
+    "expect": "allow" },
+
+  { "name": "git show with co-author in output",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git show HEAD"},
+    "expect": "allow" },
+
+  { "name": "non-git command entirely",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "npm test"},
+    "expect": "allow" },
+
+  { "name": "Read tool, not Bash",
+    "event": "PreToolUse", "tool": "Read",
+    "input": {"path": "/some/file.txt"},
+    "expect": "allow" },
+
+  { "name": "git commit with no -m flag",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit"},
+    "expect": "allow" },
+
+  { "name": "git commit with -F file flag",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -F /tmp/msg.txt"},
+    "expect": "allow" },
+
+  { "name": "empty command string",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": ""},
+    "expect": "allow" },
+
+  { "name": "null toolInput",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": null,
+    "expect": "allow" },
+
+  { "name": "missing command field",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {},
+    "expect": "allow" },
+
+  { "name": "AI co-author in second -m arg",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: add feature\" -m \"Co-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "both -m args clean",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: add feature\" -m \"Reviewed-by: Alice <alice@corp.com>\""},
+    "expect": "allow" },
+
+  { "name": "extra flags before -m",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit --allow-empty -m \"fix\\n\\nCo-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "git -C path commit with AI trailer",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git -C /home/user/proj commit -m \"fix\\n\\nCo-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "chained command with git commit containing AI trailer",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "cd /project && git add . && git commit -m \"fix\\n\\nCo-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" },
+
+  { "name": "single quotes around message",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m 'fix: bug\\n\\nCo-authored-by: Claude <noreply@anthropic.com>'"},
+    "expect": "instruct" },
+
+  { "name": "human and AI co-authors together",
+    "event": "PreToolUse", "tool": "Bash",
+    "input": {"command": "git commit -m \"feat: collab\\n\\nCo-authored-by: Jane <jane@corp.com>\\nCo-authored-by: Claude <noreply@anthropic.com>\""},
+    "expect": "instruct" }
+]
