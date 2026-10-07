@@ -42,14 +42,14 @@ Detection is case-insensitive and checks both the name and email fields.
 
 ## What It Catches
 
-✅ Intercepted:
+Intercepted:
 ```bash
 git commit -m "fix: bug\n\nCo-authored-by: Claude <noreply@anthropic.com>"
 git commit -m "feat: add feature" -m "Co-authored-by: Copilot <copilot@github.com>"
 git commit --message="fix\n\nCo-authored-by: ChatGPT <chatgpt@openai.com>"
 ```
 
-✅ Allowed through (no false positives):
+Allowed through (no false positives):
 ```bash
 git commit -m "fix: resolve null pointer"
 git commit -m "feat: collab\n\nCo-authored-by: Jane <jane@example.com>"
