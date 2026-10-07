@@ -3,7 +3,7 @@
 A policy that prevents your AI coding agent from silently adding itself as a co-author to git commits.
 
 ```bash
-failproofai policies add <your-username>/guard-ai-coauthor
+failproofai policies add jainarjav80-sys/guard-ai-coauthor
 ```
 
 ## The Problem
